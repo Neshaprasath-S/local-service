@@ -1,0 +1,183 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+<section class="service-section container-fluid ">
+  <div class="row">
+    <div class="col-lg-4 col-xl-3 p-3 nav-side bg-light pl pt-5 d-none d-lg-block">
+      <h2>Filter your service</h2>
+      <form action="{% url 'mainapp:service' %}" class="filter-form m-3" method="GET">
+        <div class="mb-3">
+          <label for="location" class="form-label mb-3">Location</label>
+          <input
+            type="text"
+            id="location"
+            name="location"
+            class="form-control"
+            value="{{ filter_items.location|default:'' }}"
+          />
+        </div>
+        
+        <div class="mb-3">
+          <label for="category" class="form-label mb-2">Category</label>
+          <select name="category" id="category" class="form-control mb-2">
+            <option value='' >Select Category</option>
+            <option value="plumbing" {% if filter_items.category == "plumbing" %} selected {% endif %}>Plumbing</option>
+            <option value="electrical" {% if filter_items.category == "electrical" %} selected {% endif %}>Electrical</option>
+            <option value="cleaning" {% if filter_items.category == "cleaning" %} selected {% endif %}>Cleaning</option>
+            <option value="carpentry" {% if filter_items.category == "carpentry" %} selected {% endif %}>Carpentry</option>
+            <option value="gardening" {% if filter_items.category == "gardening" %} selected {% endif %}>Gardening</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label mb-2">Rating</label>
+          {% for i in "54321" %}
+          <div class="form-check m-2">
+            <input
+              type="radio"
+              name="rating"
+              value="{{ i }}"
+              id="rating{{ i }}"
+              class="form-check-input"
+              {% if filter_items.rating == i %} checked {% endif %}
+            />
+            <label for="rating{{ i }}" class="form-check-label">{{ i }} Stars & up</label>
+          </div>
+         {% endfor %}
+        
+        </div>
+        <div class="mb-3">
+          <button type="submit" class="btn btn-primary">Apply filter</button>
+        </div>
+      </form>
+    </div>
+    <div class="col-lg-7 col-xl-8 ms-3 p-3  pt-5 ">
+      <div class="d-flex justify-content-between align-items-center service-header">
+      <h2>Find Trusted Services</h2>
+      <button class=" btn btn-outline-primary d-block d-lg-none me-3" data-bs-toggle="offcanvas" data-bs-target="#serviceFilter" >☰ Filter Services</button>
+      </div>
+      {% if page_obj %}
+      {% for service in page_obj %}
+      <div class="service-list mt-5">
+        <!-- Service items will be dynamically inserted here -->
+       
+        <div class="service-item row g-3">
+          <div class="service_provider_image col-5  col-md-3 col-lg-3 ">
+            <img
+              src="{{ service.profileImage.url }}"
+              alt="Service Provider image"
+              class="img-fluid rounded-circle m-0 p-0 "
+              style='height: 150px; width: 150px;'
+            />
+          </div>
+
+          <div class="service_provider_details col-6 col-md-5 col-lg-5 align-self-center ms-3">
+            <h5>{{ service.service_name }}</h5>
+            <h6>Name : {{ service.username }}</h6>
+            <p>Location :{{ service.city }} <br />
+              {% for i in "12345" %}
+               {% if forloop.counter <= service.average_rating.rating %}
+                    <span style="color: gold; font-size: 22px;">&#9733;</span>
+                {% else %}
+                    <span style="color: lightgray; font-size: 22px;">&#9733;</span>
+               {% endif %}
+              {% endfor %}
+            </p>
+            <div class="service_provider_actions  d-flex align-items-center justify-content-start  d-md-none ">
+            <a
+              href="{% url 'mainapp:providerdetails' provider_slug=service.slug %}"
+              class="btn btn-primary">View details</a>
+          </div>
+          </div>
+          <div
+            class="service_provider_actions d-none d-md-flex align-items-center justify-content-end  col-md-3"
+          >
+            <a
+              href="{% url 'mainapp:providerdetails' provider_slug=service.slug %}"
+              class="btn btn-primary"
+              >View details</a
+            >
+          </div>
+        </div>
+      </div>
+      <hr />
+      {% endfor %}
+      <ul class="pagination">
+       {% if page_obj.has_previous %}
+       <li class='page-item'><a href="?page=1" class='page-link'> &laquo;first</a></li>
+       <li class='page-item'><a href="?page={{ page_obj.previous_page_number }}" class='page-link'>{{ page_obj.previous_page_number }}</a></li>
+       {% endif %}
+
+       <li class='page-item'><a href="?page={{ page_obj.number }}" class='page-link'> page{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</a></li>
+
+       {% if page_obj.has_next %}
+       <li class='page-item'><a href="?page={{ page_obj.next_page_number }}" class='page-link'>{{ page_obj.next_page_number }}</a></li>
+       <li class='page-item'><a href="?page={{ page_obj.paginator.num_pages }}" class='page-link'>last &raquo;</a></li>
+       {% endif %}
+      </ul>
+      {% else %}
+      <p>there is no service provider in this area</p>
+      {% endif %}
+
+    </div>
+  </div>
+
+ <!-- offcanvas -->
+
+ <div class='offcanvas offcanvas-start ' data-bs-scroll="true" tabindex='-1' id='serviceFilter' >
+   <div class='offcanvas-header'>
+     <h5 class='offcanvas-title' >Filter Services</h5>
+     <button type='button' class='btn-close' data-bs-dismiss='offcanvas' ></button>
+   </div>
+   <div class='offcanvas-body'>
+      <form action="{% url 'mainapp:service' %}" class="filter-form m-3" method="GET">
+        <div class="mb-3"> 
+          <label for="location" class="form-label mb-3">Location</label>
+          <input
+            type="text"
+            id="location"
+            name="location"
+            class="form-control"
+            value="{{ filter_items.location|default:'' }}"
+          />
+        </div>
+        
+        <div class="mb-3">
+          <label for="category" class="form-label mb-2">Category</label>
+          <select name="category" id="category" class="form-control mb-2">
+            <option value='' >Select Category</option>
+            <option value="plumbing" {% if filter_items.category == "plumbing" %} selected {% endif %}>Plumbing</option>
+            <option value="electrical" {% if filter_items.category == "electrical" %} selected {% endif %}>Electrical</option>
+            <option value="cleaning" {% if filter_items.category == "cleaning" %} selected {% endif %}>Cleaning</option>
+            <option value="carpentry" {% if filter_items.category == "carpentry" %} selected {% endif %}>Carpentry</option>
+            <option value="gardening" {% if filter_items.category == "gardening" %} selected {% endif %}>Gardening</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label mb-2">Rating</label>
+          {% for i in "54321" %}
+          <div class="form-check m-2">
+            <input
+              type="radio"
+              name="rating"
+              value="{{ i }}"
+              id="rating{{ i }}"
+              class="form-check-input"
+              {% if filter_items.rating == i %} checked {% endif %}
+            />
+            <label for="rating{{ i }}" class="form-check-label">{{ i }} Stars & up</label>
+          </div>
+         {% endfor %}
+        
+        </div>
+        <div class="mb-3">
+          <button type="submit" class="btn btn-primary">Apply filter</button>
+        </div>
+      </form>
+   </div>
+ </div>
+
+</section>
+
+
+
+{% endblock content %}

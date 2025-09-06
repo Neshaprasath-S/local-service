@@ -1,0 +1,160 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+<section class="container profile-setion my-5 " >
+  <div class="mx-auto text-center">
+    <div
+      class="rounded-circle mx-auto shadow"
+      style="width: 200px; height: 200px; overflow: hidden"
+    >
+      <img src={% if profile.profileImage %} "{{ profile.profileImage.url }}"  {% else %} 
+      "{% static 'local_service_images/serviceprovider2.jpeg' %}" {% endif %} 
+      alt="profileimage" class="img-fluid h-100 w-100" style="object-fit:
+      cover" >
+    </div>
+    <h4 class="mt-4 fw-semibold">{{ profile.username | default:"Customer Name" }}</h4>
+    
+  </div>
+  <div class="mt-4 p-4 shadow rounded  bg-light" >
+    <h3 class="mb-3 border-bottom pb-2">Contact Information</h3>
+
+    <div class="mb-3">
+      <strong>Email:</strong>
+      <p class="mb-0 text-muted">{{ profile.user.email | default:"sample@gmail.com" }}</p>
+    </div>
+
+    <div class="mb-3">
+      <strong>Phone No:</strong>
+      <p class="mb-0 text-muted">{{ profile.mobile_no | default:"+91 8907654321" }}</p>
+    </div>
+
+    <div class="mb-3">
+      <strong>Address:</strong>
+      <p class="mb-0 text-muted">
+        {{ profile.address | default:"1234 Street Name, City, State, Zip" }}
+      </p>
+    </div>
+  </div>
+  <!-- Buttons -->
+  <div class="d-flex gap-5 mt-5 ">
+    <!-- Button to trigger Change Password Modal -->
+    <button
+      class="btn edit rounded-pill px-4"
+      data-bs-toggle="modal"
+      data-bs-target="#ChangePasswordModal"
+    >
+      Change Password
+    </button>
+
+    <!-- Edit Profile Button -->
+
+    <a
+      href="{% url 'mainapp:CustomerProfileEdit' %}"
+      class="btn edit  rounded-pill px-4"
+      >Edit Profile</a
+    >
+  </div>
+
+  <!-- Change Password Modal -->
+  <div class="modal fade" id="ChangePasswordModal">
+    <div class="modal-dialog">
+      <div class="modal-content rounded-5 shadow p-3">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="ChangePasswordModalLabel">
+            Change Password
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+          ></button>
+        </div>
+        <form method="POST" action="{% url 'mainapp:changepassword' %}">
+          {% csrf_token %}
+          <div class="modal-body">
+            {% include "include/error.html" %}
+            <div class="mb-3">
+              <label for="old_Password" class="form-label">Old Password</label>
+              <input
+                type="password"
+                class="form-control rounded-3"
+                id="old_Password"
+                name="old_password"
+                placeholder="Enter old password"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="new_Password" class="form-label">New Password</label>
+              <input
+                type="password"
+                class="form-control rounded-3"
+                id="new_Password"
+                name="new_password"
+                placeholder="Enter new password"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="confirm_new_Password" class="form-label"
+                >Confirm New Password</label
+              >
+              <input
+                type="password"
+                class="form-control rounded-3"
+                id="confirm_new_Password"
+                name="confirm_new_password"
+                placeholder="Re-enter new password"
+                required
+              />
+            </div>
+          </div>
+          <div class="modal-footer border-0 d-flex justify-content-between">
+            <button
+              type="button"
+              class="btn btn-outline-secondary rounded-pill px-4"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary rounded-pill px-4">
+              Update Password
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    ``
+  </div>
+</section>
+
+<section class="modal fade" id="messageModal">
+  <div class="modal-dialog">
+    <div class="modal-body">
+      <div class="text-center">
+        {% for message in messages %}
+        <h5 class="alert alert-{{ message.tags }} ">{{ message }}</h5>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+{% if messages %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Show the modal if there are  messages
+    var messageModal = new bootstrap.Modal(
+      document.getElementById("messageModal")
+    );
+    messageModal.show();
+  });
+</script>
+{% endif %} {% if form.errors %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Show the modal if there are errors or messages
+    var changePasswordModal = new bootstrap.Modal(
+      document.getElementById("ChangePasswordModal")
+    );
+    changePasswordModal.show();
+  });
+</script>
+{% endif %} {% endblock %}

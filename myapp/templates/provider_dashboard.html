@@ -1,0 +1,449 @@
+{% extends "base.html" %} {% load static %}  {% load tz %} {% block content %}
+<section class="container-fluid">
+  {% include "include/messages.html" %}
+   <section class="row dashboard-section">
+    <section class="col-lg-2 d-none d-lg-block nav-side bg-light pt-5">
+      <nav
+        class="navbar navbar-light  d-flex flex-column justify-content-between h-100"
+      >
+        <div>
+          <ul class="navbar-nav">
+            <li class="nav-item my-2">
+              <a href="{% url 'mainapp:dashboard' %}" class="nav-link">
+                <span>
+                  <img
+                    src="{% static 'local_service_images/home.png' %}"
+                    alt="dashboard"
+                  />
+                </span>
+                Dashboard
+              </a>
+            </li>
+            <li class="nav-item my-2">
+              <a href="{% url 'mainapp:ProviderProfile' %}" class="nav-link">
+                <span>
+                  <img
+                    src="{% static 'local_service_images/user.png' %}"
+                    alt="profile"
+                  />
+                </span>
+                Profile
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="nav-item mb-3">
+          <a href="#" class="nav-link text-dark">
+            <span>
+              <img
+                src="{% static 'local_service_images/arrow.png' %}"
+                alt="left arrow"
+              />
+            </span>
+            Logout
+          </a>
+        </div>
+      </nav>
+    </section>
+    <section class="col-10 col-12 col-lg-10   pt-5 ps-md-5">
+      <h2 class="mb-3 text-center text-md-start">
+        Your Work Hub
+        {% if profile %}{{ profile.username }}{% else %}{{ user.username }}{% endif %}
+      </h2>
+
+      <p class="text-muted text-center text-md-start">
+        Here you can manage your profile, view upcoming services, and track
+        completed work.
+      </p>
+      <div class="row mt-4 g-3 d-flex justify-content-center pe-sm-4">
+        <div class="col-11 col-sm-6 col-xl-3">
+          <div class=" card p-3 ps-5 mx-sm-3  w-100">
+            <h6 class="mt-2">Upcoming Jobs</h6>
+            <h4 class="my-2">{{ upcoming_booking | length }} Jobs</h4>
+            <p>Jobs you want to go</p>
+          </div>
+        </div>
+        <div class="col-11 col-sm-6 col-xl-3">
+          <div class="card p-3 ps-5 mx-sm-3  w-100">
+            <h6 class="mt-2">Average Rating</h6>
+            <div class="d-flex my-1">
+                <h4>{{ rating }}</h4>
+                <div class="star-rating mb-1 ms-3">
+                  {% for i in "12345" %}
+                    {% if forloop.counter <= rating %}
+                      <span style="color: gold; font-size: 24px;">&#9733;</span>
+                    {% else %}
+                      <span style="color: lightgray; font-size: 24px;">&#9733;</span>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+            </div>
+            <p>Your star rating</p>
+          </div>
+        </div>
+        <div class="col-11 col-sm-6 col-xl-3">
+          <div class="card p-3 ps-5 mx-sm-3  w-100">
+            <h6 class="mt-2">Total Jobs Completed</h6>
+            <h4 class="my-2"> {{ completed | length }} Completed</h4>
+            <p>Number of jobs completed</p>
+          </div>
+        </div>
+        <div class="col-11 col-sm-6 col-xl-3">
+          <div class="card p-3 ps-5 mx-sm-3  w-100">
+            <h6 class="mt-2">Total Jobs Canceled</h6>
+            <h5 class="my-2">{{ rejected }} Jobs</h5>
+            <p>Number of jobs rejected by you</p>
+          </div>
+        </div>
+      </div>
+
+      <section class="Upcoming-jobs mt-5">
+        <h4>Upcoming Jobs</h4>
+        {% if upcoming_booking %}
+        {% for booking in upcoming_booking %}
+        <div
+          class="shadow p-4 pe-0 pe-sm-4 rounded d-flex justify-content-center justify-content-sm-between mx-2  mx-sm-5 mt-4 row"
+          id="UpcomingBookingcard">
+
+          <div class='order-2 order-sm-1 col-12 col-sm-8'>
+            <h5 >Scheduled</h5>
+           
+            <p >
+              <span class="fw-bold">Customer : </span> {{ booking.customer_name }} <br />
+              <span class="fw-bold">Mobile no : </span> {{ booking.customer_mobile }} <br />
+
+              <span class="fw-bold"> Customer Address : </span> {{ booking.full_address }} <br />
+              <span class="fw-bold"> Date & Time : </span> {{ booking.booking_date }} , {{ booking.booking_time }}
+            </p>
+
+            <div class="d-flex justify-content-between justify-content-sm-start gap-5 mt-3 mx-3 mx-sm-0">
+              {% if booking.status == "pending" %}
+              <form action="{% url 'mainapp:update_booking_status' booking.id 'accept' %}" method="POST">
+                {% csrf_token %}
+                <button class="btn btn-info rounded-pill" type='submit' >Accept</button>
+              </form>
+              <form action="{% url 'mainapp:update_booking_status' booking.id 'reject' %}" method="POST">
+                {% csrf_token %}
+                <button class="btn btn-danger rounded-pill" type='submit'>Reject</button>
+              </form>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class='order-1 order-sm-2 col-12 col-sm-4 mb-4 mb-sm-2 d-flex justify-content-center align-items-center'>
+            <img
+              src="{{ booking.customer.profileImage.url }}"
+              alt="CustomerImage"
+              class="rounded-circle"
+              style="height: 150px; width: 150px"
+            />
+            
+          </div>
+        </div>
+
+        {% endfor %}
+        {% else %}
+        <p class="text-muted my-5 ">No upcoming jobs scheduled.</p>
+        {% endif %}
+
+      </section>
+
+      <div class="job-history mt-5 d-none d-sm-block">
+        <h3>Jobs History</h3>
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Customer Name</th>
+              <th>Location</th>
+              <th>Date &amp; Time</th>
+              <th>Job Status</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% if history %}
+          {% for booking in history %}
+            <tr>
+              <td>{{ booking.customer_name }}</td>
+              <td>{{ booking.location }}</td>
+              <td>{{ booking.booking_date }} {{ booking.booking_time }}</td>
+              <td>{{ booking.status }}</td>
+            </tr>
+          {% endfor %}
+          {% else %}
+          <tr>
+            <td colspan="4" class="text-center">No booking history available.</td>
+          </tr>
+          {% endif %}
+           
+          </tbody>
+        </table>
+      </div>
+
+      <section class="myservice mt-5 ">
+        
+        <div class="service-list mt-5">
+        <div class="row my-5 g-3 d-flex justify-content-center pe-sm-4">
+          <div class="d-flex justify-content-between align-items-center mb-3"> 
+            
+            <h2 class="my-3">Highlights of My Previous Work</h2>
+            
+            <button
+                type="button"
+                class="btn edit rounded-pill  p-0 px-sm-4 "
+                data-bs-toggle="modal"
+                data-bs-target="#workModal"
+                id="addWorkButton"
+              >
+                Add previous work
+              </button>
+      
+                <section class="modal fade" id="workModal">
+                  <div class="modal-dialog">
+                    <div class="modal-content p-3">
+                      <div class="modal-header">
+                        <h3>Add work</h3>
+                        <button
+                          type="button"
+                          class="btn-close"
+                          data-bs-dismiss="modal"
+                        ></button>
+                      </div>
+                      <div class="modal-body">
+                        <form method="POST" action="{% url 'mainapp:Add_previous_work' %}" enctype="multipart/form-data">
+                          {% csrf_token %}
+                          {% include "include/error.html" %}
+                          <!--  Highlights of work  -->
+                          <h4 class="mt-4">Highlights of My Previous Work</h4>
+
+                          <div class="form-group mt-4">
+                            <label for="service_title" class="form-label"
+                              >Service Title</label
+                            >
+                            <input
+                              type="text"
+                              name="service_title"
+                              id="service_title"
+                              placeholder="Servie Title"
+                              class="form-control"
+                            />
+                          </div>
+                          <div class="form-group mt-4">
+                            <label for="service_image" class="form-label">
+                              Service Image</label
+                            >
+                            <input
+                              type="file"
+                              name="service_image"
+                              id="service_image"
+                              class="form-control"
+                            />
+                          </div>
+                          <div class="form-group mt-4">
+                            <label for="service_description" class="form-label"
+                              >Service description
+                            </label>
+                            <textarea
+                              name="service_description"
+                              id="service_description"
+                              class="form-control"
+                              placeholder="About your service in short from"
+                            ></textarea>
+                          </div>
+                          <div class="form-group d-flex justify-content-end gap-5">
+                            <button
+                              data-bs-dismiss="modal"
+                              type="button"
+                              class="btn btn-outline-secondary rounded-pill mt-5 px-4"
+                            >
+                              Cancel
+                            </button>
+                            <button
+                              type="submit"
+                              class="btn btn-primary rounded-pill mt-5 px-4"
+                            >
+                              Submit
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+          </div>
+          {% if previous_work %}
+          {% for work in previous_work %}
+          <div class="col-12 col-sm-6 col-md-4  ">
+              <div class="card m-1 w-100">
+                <img
+                  src="{{ work.service_image.url }}"
+                  alt="service"
+                  class="card-image"
+                  style="height: 230px; width: 100%; object-fit: cover "
+                />
+                <div class="card-body">
+                  <h5 class="card-title fw-bold">{{ work.service_title }}</h5>
+                  <p class="card-text">
+                    {{ work.service_description|truncatechars:100 }}
+                  </p>
+                  <div class="d-flex justify-content-between myservice-btn">
+                    <button type="button" class="btn edit rounded-pill border-0" data-bs-toggle="modal" data-bs-target="#workEditModal-{{ work.id }}">Edit work</button>
+                    <a class="btn delete rounded-pill" href="{% url 'mainapp:previous_work_delete' work_id=work.id %}">Delete</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+           <section class="modal fade " id="workEditModal-{{ work.id }}">
+            <div class="modal-dialog">
+              <div class="modal-content p-3">
+                <div class="modal-header">
+                  <h3 class="add-work-title">Add work</h3>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                  ></button>
+                </div>
+                <div class="modal-body add-work">
+                  <form method="POST" action="{% url 'mainapp:previous_work_Edit' work_id=work.id %} " enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% include "include/error.html" %}
+                    <!--  Highlights of work  -->
+                    <h4 class="mt-4 add-work-title ">Highlights of My Previous Work</h4>
+
+                    <div class="form-group mt-4">
+                      <label for="service_title" class="form-label"
+                        >Service Title</label
+                      >
+                      <input
+                        type="text"
+                        name="service_title"
+                        id="service_title"
+                        placeholder="Servie Title"
+                        class="form-control"
+                        value="{{ work.service_title }}"
+                      />
+                    </div>
+                    <div class="form-group mt-4">
+                      <label for="service_image" class="form-label">
+                        Service Image</label
+                      >
+                      <input
+                        type="file"
+                        name="service_image"
+                        id="service_image"
+                        class="form-control"
+                        value="{{ work.service_image.url }}"
+                      />
+                    </div>
+                    <div class="form-group mt-4">
+                      <label for="service_description" class="form-label"
+                        >Service description
+                      </label>
+                      <textarea
+                        name="service_description"
+                        id="service_description"
+                        class="form-control"
+                        placeholder="About your service in short from"
+                      >{{ work.service_description }}</textarea>
+                    </div>
+                    <div class="form-group d-flex justify-content-between justify-content-sm-end align-items-center gap-5 myservice-btn">
+                      <button
+                        data-bs-dismiss="modal"
+                        type="button"
+                        class="btn btn-outline-secondary rounded-pill mt-5 px-sm-4 d-flex align-items-center justify-content-center"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        class="btn btn-primary rounded-pill mt-5 px-sm-4 d-flex align-items-center justify-content-center"
+                      >
+                        Submit 
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+           </section>
+          {% endfor %}
+          {% endif %}
+      </div>
+    </section>
+
+
+    <section class="review">
+  <h3 class="my-5">Review History</h3>
+  <div class="mt-3">
+    {% if booking_reviews %}
+      {% for booking_review in booking_reviews %}
+        <div class="my-4 p-3 rounded shadow-sm border bg-white">
+          <div class="row align-items-center">
+            <!-- Provider Image -->
+            <div class="col-12 col-sm-2 d-flex justify-content-center">
+              <img
+                src="{{ booking_review.customer.profileImage.url }}"
+                alt="customer Image"
+                class="rounded-circle"
+                style="height: 100px; width: 100px; object-fit: cover"
+              />
+            </div>
+
+            <!-- Provider Info -->
+            <div class="col-12 col-sm-2 text-center text-sm-start mt-3 mt-sm-0">
+              <h6 class="mb-1 fw-semibold">
+                {{ booking_review.customer.username }}
+              </h6>
+              <small class="text-muted d-block">
+               Date {{ booking_review.created_at|localtime|date:"d/m/Y" }}
+              </small>
+              <small class="text-muted d-block">
+                Time: {{ booking_review.created_at|localtime|time:"h:i A" }}
+              </small>
+            </div>
+
+            <!-- Rating + Review Text -->
+            <div class="col-12 col-sm-8 text-center text-sm-start mt-3 mt-sm-0">
+              <!-- Star Rating -->
+              <div class="star-rating mb-2">
+                {% for i in "12345" %}
+                  {% if forloop.counter <= booking_review.rating %}
+                    <span style="color: gold; font-size: 22px;">&#9733;</span>
+                  {% else %}
+                    <span style="color: lightgray; font-size: 22px;">&#9733;</span>
+                  {% endif %}
+                {% endfor %}
+              </div>
+
+              <!-- Review Text -->
+              <p class="text-secondary small my-2 " >
+                {{ booking_review.review_text | truncatechars:65 }}
+              </p>
+            </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No reviews found.</p>
+    {% endif %}
+  </div>
+</section>
+    </section>
+  </section>
+</section>
+{% include "include/message.html" %}
+{% if form.errors %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Show the modal if there are errors or messages
+    var workModal = new bootstrap.Modal(
+      document.getElementById("workModal")
+    );
+    workModal.show();
+  });
+</script>
+{% endif %}
+
+{% endblock content %}

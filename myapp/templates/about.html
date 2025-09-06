@@ -1,0 +1,124 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+<section class="container-fluid mb-5">
+  <section class="about-section container">
+    <h1 class="text-center text-white">About Us</h1>
+    <p class="text-center text-white">
+      We are a local service provider dedicated to connecting you with the best
+      services in your area.
+    </p>
+  </section>
+
+  <section class="container our-mission">
+    <h2 class="mt-5 mb-3">Our Mission</h2>
+    <div class="row justify-content-center ">
+      <div class="col-12 col-sm-5 col-md-3 p-3 m-3 our-mission-item">
+        <img
+          src="{% static 'local_service_images/security.png' %}"
+          alt="Reliable Services"
+        />
+        <h5 class="my-3">Reliable Services</h5>
+        <p>
+          We strive to provide high-quality services that meet your needs and
+          exceed your expectations.
+        </p>
+      </div>
+      <div class="col-12 col-sm-5 col-md-3 p-3 m-3  our-mission-item">
+        <img
+          src="{% static 'local_service_images/group.png' %}"
+          alt="Community Focus"
+        />
+        <h5 class="my-3">Community Focus</h5>
+        <p>
+          Our goal is to support local businesses and help them thrive in their
+          communities.
+        </p>
+      </div>
+      <div class="col-12 col-sm-5 col-md-3 p-3 m-3 our-mission-item">
+        <img
+          src="{% static 'local_service_images/partnership.png' %}"
+          alt="Trusted Partnerships"
+        />
+        <h5 class="my-3">Trusted Partnerships</h5>
+        <p>
+          We are committed to building strong relationships with our clients and
+          partners to deliver the best possible service.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="container mt-5">
+    <div class="row">
+      <div class="col-12 col-lg-6">
+        <img
+          src="{% static 'local_service_images/about.png' %}"
+          alt="about"
+          class="img-fluid my-3 rounded-3"
+        />
+      </div>
+
+      <div class="col-12 col-lg-6">
+        <h2 class="mt-5">Who we Are</h2>
+        <p>
+          At Local Services Hub, we're more than just a platform; we're a bridge
+          connecting you with the best local service providers in your area.
+          Founded in 2020, our mission is to simplify the process of finding
+          reliable professionals for all your home and personal needs. From
+          skilled plumbers and electricians to experienced tutors and personal
+          trainers, we've curated a network of trusted experts committed to
+          delivering exceptional service.
+        </p>
+
+        <h2>Our Values</h2>
+        <p>
+          Our core values drive everything we do. We believe in transparency,
+          ensuring you have access to detailed profiles, customer reviews, and
+          clear pricing. We prioritize quality, carefully vetting each service
+          provider to maintain our high standards. And we're committed to
+          community, fostering a platform where both customers and professionals
+          can thrive. Our goal is to make your life easier by providing a
+          seamless, trustworthy way to access the services you need.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="container contact-us mt-5">
+    <h2 class="mb-3 text-center">Contact Us</h2>
+    <form action="" method="post " class="form col-10 mx-auto col-md-8 col-lg-6">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input
+          type="text"
+          id="name"
+          placeholder="Enter your name"
+          class="form-control"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          placeholder="Enter your email"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="message" class="form-label">Message</label>
+        <textarea
+          class="form-control"
+          id="message"
+          rows="4"
+          placeholder="Enter your message"
+          required
+        ></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Send Message</button>
+    </form>
+  </section>
+</section>
+{% endblock content %}

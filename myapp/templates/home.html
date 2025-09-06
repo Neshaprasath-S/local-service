@@ -1,0 +1,217 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+
+<section class="container hero-section mt-5 text-white rounded-3">
+  <h1 class=" text-center mt-5">Find Local Services Near You</h1>
+  
+  <p class="text-center mb-3">
+    Your one-stop solution for local services. Find, book, and manage services
+    in your area with ease.
+  </p>
+  <div class="search-bar col-8 col-md-6 mx-auto">
+    <form method="GET" action="{% url 'mainapp:service' %}" >
+      <input
+        type="text"
+        name="query"
+        placeholder="   Search for services..."
+        class="form-control"
+      />
+      <img
+        src="{% static 'local_service_images/search.png' %}"
+        alt="Search Icon"
+        class="search-icon"
+      />
+
+      <button type="submit" class="btn btn-primary rounded-pill">
+        Find Services
+      </button>
+    </form>
+  </div>
+</section>
+
+<section class="container mt-5 trending-services">
+  <h2 class="mb-3">Trending Services</h2>
+  <div class="row g-3">
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="card  p-2  shadow-hover " style="height: 100% ; width: 100%;">
+                    <img
+                      src="{% static 'local_service_images/homecleaner.jpg' %}"
+                      alt="Home Cleaning Services"
+                      class="card-img-top rounded-3"
+                    />
+                    <div class="card-body">
+                          <h5 class="card-title">Home Cleaning</h5>
+                          <p class="card-text">
+                            Professional home cleaning services to keep your space spotless.
+                          </p>
+                          <a href="{% url 'mainapp:service' %}?category=cleaning" class="btn btn-primary">Book Now</a>
+                    </div>
+            </div>
+    </div>
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="card p-2 shadow-hover" style="height: 100% ; width: 100%;">
+                <img
+                  src="{% static 'local_service_images/Appliance_Technician.jpeg' %}"
+                  alt="Appliance Technician Services"
+                  class="card-img-top rounded-3"
+                />
+                <div class="card-body">
+                      <h5 class="card-title">Appliance Technician</h5>
+                      <p class="card-text">
+                        Professional appliance technician services to fix your home devices.
+                      </p>
+                      <a href="{% url 'mainapp:service' %}?category=electrical" class="btn btn-primary">Book Now</a>
+                </div>
+          </div>
+    </div>
+  
+   <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="card  p-2  shadow-hover"  style="height: 100% ; width: 100%;">
+                <img
+                  src="{% static 'local_service_images/landscaping.jpg' %}"
+                  alt="Landscaping Services"
+                  class="card-img-top rounded-3"
+                />
+                <div class="card-body">
+                        <h5 class="card-title">Landscaping</h5>
+                        <p class="card-text">
+                          Professional landscaping services to beautify your outdoor space.
+                        </p>
+                        <a href="{% url 'mainapp:service' %}?category=gardening" class="btn btn-primary">Book Now</a>
+                </div>
+            </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="card  p-2  shadow-hover"  style="height: 100% ; width: 100%;">
+                <img
+                  src="{% static 'local_service_images/Appliance_Technician.jpeg' %}"
+                  alt="Appliance Technician Services"
+                  class="card-img-top rounded-3"
+                 />
+                <div class="card-body">
+                      <h5 class="card-title">Appliance Technician</h5>
+                      <p class="card-text">
+                        Professional appliance technician services to fix your home devices.
+                      </p>
+                      <a href="{% url 'mainapp:service' %}?category=electrical" class="btn btn-primary">Book Now</a>
+                </div>
+          </div>
+    </div>
+  </div>
+</section>
+
+<section class="mt-5 Popular_Categories container">
+  <h2 class="mb-4">Popular Categories</h2>
+  <div class="row">
+    <div class="col-6 col-sm-4 text-center p-3 w-30 category-item">
+      <a href="{% url 'mainapp:service' %}?category=electrical"
+        ><img
+          src="{% static 'local_service_images/electrical.jpeg' %}"
+          alt="Electrical Services"
+          class="rounded-3"
+        />
+        <h4 class="mt-3">Electrical</h4>
+      </a>
+    </div>
+    <div class="col-6 col-sm-4  text-center p-3 w-30 category-item">
+      <a href="{% url 'mainapp:service' %}?category=plumbing"
+        ><img
+          src="{% static 'local_service_images/plumbing.jpeg' %}"
+          alt="Plumbing Services"
+          class="rounded-3"
+        />
+        <h4 class="mt-3">Plumbing</h4>
+      </a>
+    </div>
+
+    <div class="col-6 col-sm-4  text-center p-3 w-30 category-item">
+      <a href="{% url 'mainapp:service' %}?category=painting"
+        ><img
+          src="{% static 'local_service_images/painting.jpeg' %}"
+          alt="Painting Services"
+          class="rounded-3"
+        />
+        <h4 class="mt-3">Painting</h4>
+      </a>
+    </div>
+    <div class="col-6 col-sm-4  text-center p-3 w-30 category-item">
+      <a href="{% url 'mainapp:service' %}?category=carpentry"
+        ><img
+          src="{% static 'local_service_images/carpenter.jpeg' %}"
+          alt="Carpenter Services"
+          class="rounded-3"
+        />
+        <h4 class="mt-3">Carpenter</h4>
+      </a>
+    </div>
+    <div class="col-6 col-sm-4 text-center p-3 w-30 category-item">
+      <a href="{% url 'mainapp:service' %}?category=computer_repair"
+        ><img
+          src="{% static 'local_service_images/computer_repair.jpeg' %}"
+          alt="Computer Repair Services"
+          class="rounded-3"
+        />
+        <h4 class="mt-3">Computer Repair</h4>
+      </a>
+    </div>
+
+    <div class="col-6 col-sm-4 text-center p-3 w-30 category-item">
+      <a href="{% url 'mainapp:service' %}?category=cctv"
+        ><img
+          src="{% static 'local_service_images/cctv.jpeg' %}"
+          alt="CCTV Installation Services"
+          class="rounded-3"
+        />
+        <h4 class="mt-3">CCTV Installation</h4>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="container mt-5">
+  <h2 class="text-center mb-4">How It Works</h2>
+  <div class="row justify-content-center">
+    <div class='col-12 col-sm-3 m-3 p-2'>
+        <div class=" how-it-works card " style="height: 100% ; width: 100%;">
+          <img
+            src="{% static 'local_service_images/search2.png' %}"
+            alt="Search Services"
+            class="img-fluid m-3"
+          />
+          <h5 class="mx-3">Search Services</h5>
+          <p class="mx-3">Find the services you need in your area.</p>
+        </div>
+    </div>
+    <div class='col-12 col-sm-3 m-3 p-2'>
+        <div class=" how-it-works card " style="height: 100% ; width: 100%;">
+          <img                                    
+            src="{% static 'local_service_images/booking.png' %}"
+            alt="Book Services"
+            class="img-fluid m-3"
+          />
+          <h5 class="mx-3">Book Services</h5>
+          <p class="mx-3">Schedule a service at your convenience.</p>
+        </div>
+    </div>
+    <div class='col-12 col-sm-3 m-3 p-2'>
+        <div class=" how-it-works card " style="height: 100% ; width: 100%;">
+          <img
+            src="{% static 'local_service_images/done.png' %}"
+            alt="Manage Services"
+            class="img-fluid m-3"
+          />
+          <h5 class="mx-3">Manage Services</h5>
+          <p class="mx-3">Track and manage your booked services easily.</p>
+        </div>
+    </div>
+  </div>
+
+  <section class="mt-5 text-center">
+    <h1 class="mt-5">Ready to Find Your Perfect Service provider ?</h1>
+    <a href="{% url 'mainapp:service' %}" class="btn btn-primary rounded-3 mt-3 mb-5"
+      >Get Started Today</a
+    >
+  </section>
+</section>
+
+{% endblock %}

@@ -1,0 +1,19 @@
+<section class="d-flex justify-content-center">
+  <div>
+    {% for field in form %} {% if field.errors %}
+    <!-- Display field-specific errors -->
+    {% for error in field.errors%}
+    <strong>{{ field.label }}:</strong>
+    <span class="text-danger">{{ error }}</span><br />
+    {% endfor %} {% endif %} {% endfor %}
+  </div>
+  <!-- Display non-field errors and messages -->
+  {% if form.non_field_errors %}
+  <div class="alert alert-danger">
+    {% for error in form.non_field_errors %}
+    <span class="text-danger">{{ error }}</span><br />
+    {% endfor %}
+  </div>
+  {% endif %}
+  
+</section>

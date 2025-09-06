@@ -1,0 +1,303 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+
+<section class="container  providerdetails-section">
+  <div class="banner d-none d-sm-block">
+    <img
+      src="{{ provider.banner_image.url }}"
+      alt="About Banner"
+      class="img-fluid w-100"
+      style="object-fit: cover; height: 230px"
+    />
+  </div>
+  <div class="row mt-4">
+    <section class="col-12 col-xl-9">
+      <!-- provider details section -->
+      <div class="row mt-4 pe-sm-5 mx-5">
+        <div class="col-12 col-sm-3  d-flex align-items-center justify-content-center">
+          <img
+            src="{{ provider.profileImage.url }}"
+            alt="service_provider_image"
+            class="rounded-circle m-2"
+            style="height: 180px; width: 180px"
+          />
+        </div>
+        <div class="col-12 col-sm-8  mt-3 d-flex flex-column align-items-center justify-content-center">
+          <div class="ms-4 ms-md-0">
+          <h2 >{{ provider.username }}</h2>
+          <h4>{{ provider.service_name }}</h4>
+          <div class="d-flex">
+            {% if rating %}
+            <h5 class="mb-1">{{ rating.rating }} <span class="text-warning">{% for i in "12345" %} {% if forloop.counter <= rating.rating %}★{% else %}☆{% endif %}{% endfor %}</span> rating</h5>
+            {% else %}
+            <h5 class="mb-1">No rating available</h5>
+            {% endif %}
+          </div>
+          </div>
+        </div>
+        
+      </div>
+
+      <!--  about me section  -->
+      <div class="mt-5 ">
+        <h3 class="mb-4 ms-5 ms-sm-0">About Me</h3>
+        <p class=' pe-sm-5 mx-5'>
+          {{ provider.about_content }}
+        </p>
+      </div>
+
+      <!-- provider feature section -->
+      <div class="mt-5 provider-feature">
+        <h3 class="mb-4 ms-5 ms-sm-0">Why Choose Me</h3>
+        <div class="row d-flex justify-content-center">
+          <!-- Feature 1 -->
+          <div class="col-10 col-sm-5 col-lg-3 border shadow-sm m-2 py-2">
+            <div class="text-center">
+              <img
+                src="{% static 'local_service_images/clock.png' %}"
+                alt="Time Management"
+                class="mx-auto mb-2"
+              />
+              <h6 class="fw-semibold">Best Time Management</h6>
+            </div>
+          </div>
+
+          <!-- Feature 2 -->
+          <div class="col-10 col-sm-5 col-lg-3 border shadow-sm m-2 py-2">
+            <div class="text-center">
+              <img
+                src="{% static 'local_service_images/rupee.png' %}"
+                alt="Best Pricing"
+                class="mx-auto mb-2"
+              />
+              <h6 class="fw-semibold">Affordable Pricing</h6>
+            </div>
+          </div>
+
+          <!-- Feature 3 -->
+          <div class="col-10 col-sm-5 col-lg-3 border shadow-sm m-2 py-2">
+            <div class="text-center">
+              <img
+                src="{% static 'local_service_images/certificate.png' %}"
+                alt="Certified"
+                class="mx-auto mb-2"
+              />
+              <h6 class="fw-semibold">Licensed & Certified</h6>
+            </div>
+          </div>
+
+          <!-- Feature 4 -->
+          <div class="col-10 col-sm-5  col-lg-3 border shadow-sm m-2 py-2">
+            <div class="text-center">
+              <img
+                src="{% static 'local_service_images/security.png' %}"
+                alt="Reliable"
+                class="mx-auto mb-2"
+              />
+              <h6 class="fw-semibold">Reliable & Secure</h6>
+            </div>
+          </div>
+
+          <!-- Feature 5 -->
+          <div class="col-10 col-sm-5 col-lg-3 border shadow-sm m-2 py-2">
+            <div class="text-center">
+              <img
+                src="{% static 'local_service_images/recycle.png' %}"
+                alt="Eco Friendly"
+                class="mx-auto mb-2"
+              />
+              <h6>Eco-Friendly Products</h6>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- pricing section -->
+      <div class="mt-5">
+        <h3 class="mb-4 ms-5 ms-sm-0">Pricing</h3>
+        <p class="mb-3 ms-5 ms-sm-0">
+          Choose the best plan based on your needs. Flexible rates based on
+          service and duration.
+        </p>
+
+        <div class="row d-flex justify-content-center">
+          <!-- Basic Visit -->
+          <div class="col-10 col-sm-5 col-lg-4  mb-3">
+            <div class="h-100 shadow text-center p-3 pricing-card">
+              <div>
+                <h6>Basic Visit</h6>
+                <h3 class="text-primary mb-3">₹199</h3>
+                <p>For small tasks and minor fixes.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Standard Service -->
+          <div class="col-10 col-sm-5 col-lg-4  mb-3">
+            <div class="h-100 shadow text-center p-3 pricing-card">
+              <div>
+                <h6>Standard Service</h6>
+                <h3 class="text-success mb-3">₹499</h3>
+                <p>Ideal for general services and routine work.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Full Service -->
+          <div class="col-10 col-sm-5 col-lg-4 mb-3">
+            <div class="h-100 shadow text-center p-3 pricing-card">
+              <div>
+                <h6>Full Service</h6>
+                <h3 class="text-danger mb-3">₹999</h3>
+                <p>Comprehensive top-to-bottom service package.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- other service -->
+      <div class="my-5">
+        <h3 class="mb-3">Highlights of My Previous Work</h3>
+        <div class="row d-flex justify-content-center">
+          {% if previous_work %}
+          {% for work in previous_work %}
+          <div class='col-10 col-sm-6 col-lg-4 mb-3'>
+              <div class="card m-2 " style="height: 100%; width: 100%;">
+                    <img
+                      src="{{ work.service_image.url }}"
+                      alt="service"
+                      class="card-image"
+                      style="height: 230px; width: 100%; object-fit: cover "
+                    />
+                    <div class="card-body">
+                      <h5 class="card-title fw-bold">{{ work.service_title }}</h5>
+                      <p class="card-text">
+                        {{ work.service_description|truncatechars:100 }}
+                      </p>
+                      
+                    </div>
+              </div>
+          </div>
+          {% endfor %}
+          {% else %}
+          <p>There is no previous work available.</p>
+          {% endif %}
+        </div>
+      </div>
+    </section>
+    <section class=" col-11 col-sm-10 col-md-7 col-xl-3 mx-auto">
+      <div class="contact-section mt-4 d-flex flex-column align-items-center">
+        <h3 class="mb-4">Contact Information</h3>
+
+        <hr class="mb-2" />
+        <div class="row g-2 mt-3">
+          <span class="col-3 text-secondary">Phone no</span>
+          <span class="col-9"> {{ provider.mobile_no | default:" +91 2345678910" }} </span>
+          <hr class="mb-3" />
+          <span class="col-3 text-secondary">Email</span>
+          <span class="col-9"> {{ provider.email | default:"sample@gmail.com" }} </span>
+          <hr class="mb-3" />
+          <span class="col-3 text-secondary">Location</span> 
+          <span class="col-9"> {{ provider.address | default:" India" }} </span>
+          <hr class="mb-3" />
+        </div>
+      </div>
+      <div class="booking-form mt-5">
+        <h3 class="mb-4">Schedule a Service</h3>
+        <hr class="mb-3" />
+
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <span class="text-secondary">Availability</span>
+          <span class="fw-medium">Mon - Sat, 9:00 AM - 7:00 PM</span>
+        </div>
+        <hr class="mb-3" />
+        <form method="POST" action="{% url 'mainapp:service_booking' provider.slug %}">
+          {% if form.errors %}
+            <div class="alert alert-danger">
+              <strong>Error!</strong> Please correct the errors below.
+            </div>
+          {% endif %}
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="customername" class="form-label fw-bold">Full Name</label>
+            <input
+              type="text"
+              name="customer_name"
+              class="form-control"
+              placeholder="Enter your name"
+              id="customername"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="customer_mobile" class="form-label fw-bold">Mobile No</label>
+            <input
+              type="number"
+              name="customer_mobile"
+              class="form-control"
+              placeholder="Enter your mobile number"
+              id="customer_mobile"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="location" class="form-label fw-bold">Location</label>
+            <input
+              type="text"
+              name="location"
+              class="form-control"
+              placeholder="Enter your Location"
+              id="location"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="service_type" class="form-label fw-bold"
+              >Select a Service Type</label
+            >
+            <select name="service_type" id="service_type" class="form-select" required>
+              <option selected disabled >Choose a service</option>
+               {% for value, label in service_choices %}
+                <option value="{{ value }}">{{ label }}</option>
+              {% endfor %} 
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="full_address" class="form-label fw-bold">Address</label>
+            <textarea
+              type="text"
+              name="full_address"
+              class="form-control"
+              placeholder="Enter your full address"
+              id="full_address"
+              style="height: 150px"
+              required
+            ></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="booking_date" class="form-label fw-bold">Date</label>
+            <input
+              type="date"
+              class="form-control"
+              name="booking_date"
+              id="booking_date"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="booking_time" class="form-label fw-bold">Time</label>
+            <input
+              type="time"
+              class="form-control"
+              name="booking_time"
+              id="booking_time"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-primary my-3">
+            Book my service
+          </button>
+        </form>
+      </div>
+    </section>
+  </div>
+</section>
+{% endblock content %}

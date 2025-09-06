@@ -1,0 +1,414 @@
+{% extends "base.html" %} {% load static %} {% load tz %}   {% block content %}
+
+<section class="container-fluid">
+  {% include "include/messages.html" %}
+  <section class="row dashboard-section">
+    <!-- Sidebar -->
+    <section class="col-lg-2 d-none d-lg-block nav-side bg-light pt-5 ">
+      <nav
+        class="navbar navbar-light d-flex flex-column justify-content-between h-100"
+      >
+        <div>
+          <ul class="navbar-nav">
+            <li class="nav-item my-2">
+              <a href="{% url 'mainapp:dashboard' %}" class="nav-link">
+                <span>
+                  <img
+                    src="{% static 'local_service_images/home.png' %}"
+                    alt="dashboard"
+                  />
+                </span>
+                Dashboard
+              </a>
+            </li>
+            <li class="nav-item my-2">
+              <a href="{% url 'mainapp:CustomerProfile' %}" class="nav-link">
+                <span>
+                  <img
+                    src="{% static 'local_service_images/user.png' %}"
+                    alt="profile"
+                  />
+                </span>
+                Profile
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="nav-item mb-3">
+          <a href="#" class="nav-link text-dark">
+            <span>
+              <img
+                src="{% static 'local_service_images/arrow.png' %}"
+                alt="left arrow"
+              />
+            </span>
+            Logout
+          </a>
+        </div>
+      </nav>
+    </section>
+    <!-- Main Content -->
+    <section class=" col-12 col-lg-10   pt-5 ps-md-5">
+      <h2 class="mb-3 text-center text-md-start">
+        Welcome {% if profile %}{{ profile.username }}
+        {% else %}
+        {{ user.username }}
+        {% endif %}
+      </h2>
+
+      <p class="text-muted text-center text-md-start">
+        Here you can manage your profile, view upcoming services
+      </p>
+      <section class="dashboard-cards">
+        <!-- Stats Cards -->
+        <div class="row g-3 mt-4 d-flex justify-content-center pe-sm-4">
+          <div class="col-11 col-md-6 col-xl-3">
+            <div class="card p-3 ps-5 mx-sm-3  w-100">
+              <h6 class="mt-2">My Booking</h6>
+              <h5 class="my-2">{{ upcoming_booking|length }} Upcoming Service</h5>
+              <p>Total number of upcoming services</p>
+            </div>
+          </div>
+
+          <div class="col-11 col-md-6 col-xl-3">
+              <div class=" card p-3 ps-5 mx-sm-3  w-100">
+                <h6 class="mt-2">Total Booking</h6>
+                <h5 class="my-2">{{ history|length }} Bookings</h5>
+                <p>Total number of services you booked</p>
+              </div>
+          </div>
+          <div class="col-11 col-md-6 col-xl-3">
+            <div class=" card p-3 ps-5 mx-sm-3 w-100">
+              <h6 class="mt-2">Total Service Completed</h6>
+            <h5 class="my-2">{{ completed }} Services</h5>
+              <p>Total number of services completed</p>
+            </div>
+        </div>
+        <div class="col-11 col-md-6 col-xl-3">
+          <div class=" card p-3 ps-5 mx-sm-3  w-100">
+            <h6 class="mt-2">Total Service Cancelled</h6>
+            <h5 class="my-2">{{ canceled }} Services</h5>
+            <p>Number of services cancelled by you</p>
+          </div>
+          </div>
+        </div>
+      </section>
+      <!-- Upcoming Bookings -->
+
+      <section class="my-booking mt-5 p-3 ">
+        <h3>My Upcoming Bookings</h3>
+        {% if upcoming_booking %} {% for booking in upcoming_booking %}
+        <div class="service-list mt-5">
+          <div class="service-item row g-3">
+            <div class="service_provider_image col-11 col-md-2 col-lg-2 col-xl-2 d-flex justify-content-center">
+              <a
+                href="{% url 'mainapp:providerdetails' booking.service_provider.slug %}"
+              >
+                <img
+                  src="{{ booking.service_provider.profileImage.url }}"
+                  alt="Service Provider image"
+                  class="img-fluid rounded-circle m-0 p-0"
+                />
+              </a>
+            </div>
+
+            <div class="service_provider_details col-11 col-md-6 col-lg-6 col-xl-6 align-self-center ms-3">
+              <h5>{{ booking.service_provider.service_name }}</h5>
+              <h6>Name : {{ booking.service_provider.username }}</h6>
+              <p>
+                {% if booking.status == 'pending' %} Status :
+                <span class="text-warning">Pending</span><br />
+                {% elif booking.status == 'accept' %} Status :
+                <span class="text-success">Accepted</span><br />
+                {% elif booking.status == 'cancel' %} Status :
+                <span class="text-danger">Cancelled</span><br />
+                {% endif %} Date &amp; Time : {{ booking.booking_date }} , {{ booking.booking_time }}<br />
+                Location : {{ booking.service_provider.city }}
+              </p>
+            </div>
+
+            <!-- Actions -->
+            <div
+              class="service_provider_actions mx-3 mx-sm-0 col-11 col-md-3 d-flex align-items-center justify-content-between justify-content-sm-end  gap-3"
+            >
+              {% if booking.status == 'accept' %}
+              <form
+                action="{% url 'mainapp:update_booking_status' booking.id 'complete' %}"
+                method="POST"
+              >
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success rounded-pill">
+                  Complete
+                </button>
+              </form>
+              {% endif %}
+
+              <form
+                action="{% url 'mainapp:update_booking_status' booking.id 'cancel' %}"
+                method="POST"
+              >
+                {% csrf_token %}
+                <button type="submit" class="btn edit rounded-pill">
+                  Cancel
+                  <img
+                    src="{% static 'local_service_images/close.png' %}"
+                    alt="close"
+                    style="width: 10px; height: 10px"
+                  />
+                </button>
+              </form>
+            </div>
+          </div>
+          <hr />
+        </div>
+        {% endfor %} {% else %}
+        <p>No upcoming bookings found.</p>
+        {% endif %}
+      </section>
+
+      <!-- Booking History -->
+
+      <div class="service-history mt-5 ">
+        <h3 class="my-5">My Booking History</h3>
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Provider Name</th>
+              <th>Service Name</th>
+              <th>Date &amp; Time</th>
+              <th class='d-none d-md-block'>Service Status</th>
+              <th>Review</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if history %} {% for booking in history %}
+            <tr>
+              <td>{{ booking.service_provider.username }}</td>
+              <td>{{ booking.service_provider.service_name }}</td>
+              <td>{{ booking.booking_date }} {{ booking.booking_time }}</td>
+              <td class='d-none d-md-block'>{{ booking.status }}</td>
+              <td>
+                {% if booking.status == 'complete' %}
+                <a
+                  data-bs-toggle="modal"
+                  data-bs-target="#review-modal-{{ booking.id }}"
+                  >Review</a
+                >
+
+                <!-- Review Modal -->
+                <div class="modal fade" id="review-modal-{{ booking.id }}">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">Share Your Experience</h5>
+                        <button
+                          type="button"
+                          class="btn-close"
+                          data-bs-dismiss="modal"
+                        ></button>
+                      </div>
+                      <div class="modal-body">
+                        <form
+                          method="POST"
+                          action="{% url 'mainapp:booking_review' booking.id %}"
+                        >
+                          {% csrf_token %}
+                          <div class="mb-3">
+                            <label
+                              for="rating-{{ booking.id }}"
+                              class="form-label"
+                              >Rating</label
+                            >
+                            <select
+                              id="rating-{{ booking.id }}"
+                              name="rating"
+                              class="form-select"
+                              required
+                            >
+                              <option disabled selected>Select Rating</option>
+                              <option value="1">1 Star</option>
+                              <option value="2">2 Stars</option>
+                              <option value="3">3 Stars</option>
+                              <option value="4">4 Stars</option>
+                              <option value="5">5 Stars</option>
+                            </select>
+                          </div>
+                          <div class="mb-3">
+                            <label
+                              for="review_text-{{ booking.id }}"
+                              class="form-label"
+                              >Review</label
+                            >
+                            <textarea
+                              name="review_text"
+                              id="review_text-{{ booking.id }}"
+                              placeholder="Enter your review"
+                              class="form-control"
+                            ></textarea>
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                              Submit
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% else %} No review {% endif %}
+              </td>
+            </tr>
+            {% endfor %} {% else %}
+            <tr>
+              <td colspan="5" class="text-center">No booking history found.</td>
+            </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Review History -->
+
+      <section class="review ">
+        <h3 class="my-5">Review History</h3>
+        <div class="mt-3">
+          {% if booking_reviews %}
+            {% for booking_review in booking_reviews %}
+              <div class="my-4 p-3 mx-3 mx-sm-0 rounded shadow-sm border bg-white">
+                <div class="row g-3 align-items-center">
+                  <!-- Provider Image -->
+                  <div class="col-12  col-sm-2 d-flex justify-content-center">
+                    <img
+                      src="{{ booking_review.service_provider.profileImage.url }}"
+                      alt="Provider Image"
+                      class="rounded-circle"
+                      style="height: 100px; width: 100px; object-fit: cover"
+                    />
+                  </div>
+
+                  <!-- Provider Info -->
+                  <div class="col-12 col-sm-2 align-self-center text-center text-sm-start">
+                    <h5 class='mb-1 fw-semibold'> {{ booking_review.service_provider.service_name }}</h5>
+                    <h6 class="mb-1 fw-semibold">
+                      {{ booking_review.service_provider.username }}
+                    </h6>
+                    <small class="text-muted d-block">
+                    Date {{ booking_review.created_at|localtime|date:"d/m/Y" }}
+                    </small>
+                    <small class="text-muted d-block">
+                      Time: {{ booking_review.created_at|localtime|time:"h:i A" }}
+                    </small>
+                  </div>
+
+                  <!-- Rating + Review Text -->
+                  <div class=" col-12 col-sm-6 align-self-center text-center text-sm-start">
+                    <!-- Star Rating -->
+                    <div class="star-rating mb-3">
+                      {% for i in "12345" %}
+                        {% if forloop.counter <= booking_review.rating %}
+                          <span style="color: gold; font-size: 22px;">&#9733;</span>
+                        {% else %}
+                          <span style="color: lightgray; font-size: 22px;">&#9733;</span>
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+
+                    <!-- Review Text -->
+                    <p class="text-secondary small my-2 text-wrap" >
+                      {{ booking_review.review_text | truncatechars:65 }}
+                    </p>
+                  </div>
+
+                  <!-- Rewrite Review -->
+                  <div class="col-12 col-sm-2  d-flex justify-content-end  pe-5">
+                    <a
+                      data-bs-toggle="modal"
+                      data-bs-target="#rewrite_review-modal-{{ booking_review.id }}"
+                      class="btn btn-outline-primary btn-sm rounded-pill"
+                    >
+                      Review
+                    </a>
+
+                    <!-- Rewrite Modal -->
+                    <div class="modal fade" id="rewrite_review-modal-{{ booking_review.id }}">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title">Share Your Experience</h5>
+                            <button
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                            ></button>
+                          </div>
+                          <div class="modal-body">
+                            <form method="POST" action="{% url 'mainapp:rewrite_booking_review' booking_review.id %}">
+                              {% csrf_token %}
+                              <div class="mb-3">
+                                <label for="rating-{{ booking_review.id }}" class="form-label">Rating</label>
+                                <select
+                                  id="rating-{{ booking_review.id }}"
+                                  name="rating"
+                                  class="form-select"
+                                  required
+                                >
+                                  <option value="1" {% if booking_review.rating == 1 %}selected{% endif %}>1 Star</option>
+                                  <option value="2" {% if booking_review.rating == 2 %}selected{% endif %}>2 Stars</option>
+                                  <option value="3" {% if booking_review.rating == 3 %}selected{% endif %}>3 Stars</option>
+                                  <option value="4" {% if booking_review.rating == 4 %}selected{% endif %}>4 Stars</option>
+                                  <option value="5" {% if booking_review.rating == 5 %}selected{% endif %}>5 Stars</option>
+                                </select>
+                              </div>
+
+                              <div class="mb-3">
+                                <label for="review_text-{{ booking_review.id }}" class="form-label">Review</label>
+                                <textarea
+                                  name="review_text"
+                                  id="review_text-{{ booking_review.id }}"
+                                  placeholder="Enter your review"
+                                  class="form-control"
+                                >{{ booking_review.review_text }}</textarea>
+                              </div>
+
+                              <div class="modal-footer">
+                                <button
+                                  type="button"
+                                  class="btn btn-secondary"
+                                  data-bs-dismiss="modal"
+                                >
+                                  Close
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                  Submit
+                                </button>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <p>No reviews found.</p>
+          {% endif %}
+        </div>
+      </section>
+
+    </section>
+  </section>
+</section>
+
+
+{% endblock content %}

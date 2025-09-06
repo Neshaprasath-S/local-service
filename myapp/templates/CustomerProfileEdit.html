@@ -1,0 +1,109 @@
+{% extends "base2.html" %} {% load static %} {% block content %}
+<section class="container editprofile-section">
+  <h2 class="text-center mb-4">Profile</h2>
+  <div class="row d-flex justify-content-center mb-5">
+    <div class="shadow rounded  pb-3 px-3 p-sm-3 p-md-5 bg-white col-11 col-sm-10 col-md-9 col-lg-7 col-xl-6">
+      {% include "include/error.html" %}
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-group mt-4">
+          <label for="profileImage" class="form-label">Profile Image</label>
+          <input
+            type="file"
+            class="form-control"
+            id="profileImage"
+            name="profileImage"
+            placeholder="profile image"
+            required
+          />
+        </div>
+
+        <div class="form-group mt-4">
+          <label for="username" class="form-label">Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="username"
+            placeholder="Enter your name"
+            required
+            name="username"
+          />
+        </div>
+       
+        <!-- contact information section-->
+        <h4 class="mt-4">Contact Information</h4>
+
+        <div class="form-group mt-4">
+          <label for="mobile_no" class="form-label">Mobile No</label>
+          <input
+            type="tel"
+            id="mobile_no"
+            class="form-control"
+            name="mobile_no"
+            placeholder="1234567890"
+            required
+          />
+        </div>
+        <div class="form-group mt-4">
+          <label for="email" class="form-label">Email address</label>
+          <input
+            type="email"
+            id="email"
+            class="form-control"
+            name="email"
+            placeholder="Example@email.com"
+            required
+          />
+        </div>
+        <div class="form-group mt-4">
+          <label for="district" class="form-label">District</label>
+          <input
+            type="text"
+            id="district"
+            class="form-control"
+            name="district"
+            placeholder=" Your district"
+            required
+          />
+        </div>
+        <div class="form-group mt-4">
+          <label for="city" class="form-label">City</label>
+          <input
+            type="text"
+            id="city"
+            class="form-control"
+            name="city"
+            placeholder=" Your city"
+            required
+          />
+        </div>
+
+        <div class="form-group mt-4">
+          <label for="address" class="form-label"> Address</label>
+          <textarea
+            name="address"
+            id="address"
+            class="form-control"
+            placeholder="Street, City, District, ZIP code"
+          ></textarea>
+        </div>
+
+        <div class="form-group d-flex justify-content-between gap-5 ">
+          <a
+            href="{% url 'mainapp:CustomerProfile' %}"
+            class="btn btn-outline-secondary rounded-pill mt-5 px-4"
+          >
+            Cancel</a
+          >
+
+          <button type="submit" class="btn btn-primary rounded-pill mt-5 px-4">
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+{% endblock content %}

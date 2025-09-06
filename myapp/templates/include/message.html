@@ -1,0 +1,22 @@
+<section class="modal fade" id="messageModal">
+  <div class="modal-dialog">
+    <div class="modal-body">
+      <div class="text-center">
+        {% for message in messages %}
+        <h5 class="alert alert-{{ message.tags }} ">{{ message }}</h5>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+{% if messages %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Show the modal if there are  messages
+    var messageModal = new bootstrap.Modal(
+      document.getElementById("messageModal")
+    );
+    messageModal.show();
+  });
+</script>
+{% endif %}

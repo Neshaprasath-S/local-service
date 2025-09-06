@@ -1,0 +1,100 @@
+{% extends "base2.html" %} {% block content %} {% load static %}
+
+<section class="container register-section">
+  <div class="row pt-2 shadow-lg mt-4 rounded bg-white">
+    <div class="text-center mb-4 col-12 col-md-6 col-lg-6 align-self-center registerImage">
+      <h2 class="text-center mb-5">Create Your Account</h2>
+      {% include "include/error.html" %}
+      <img
+        src="{% static 'local_service_images/register.jpg' %}"
+        alt="Register"
+        style="width: 400px; height: auto"
+        class="img-fluid mt-3"
+      />
+    </div>
+    <div class="p-4 col-12 col-md-6 col-lg-5  align-self-center">
+      <h2 class="text-center mb-2 registerTitle">Create Your Account</h2>
+      
+      <form method="POST" class="form-container col-8 me-auto" style="width: 100%;">
+        {% csrf_token %}
+        <div class='d-md-none mb-3'>
+       {% include "include/error.html" %}
+         </div>
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input
+            type="text"
+            name="username"
+            id="username"
+            class="form-control"
+            placeholder="Username"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            class="form-control"
+            placeholder="Enter your email"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="phone" class="form-label">Phone Number</label>
+          <input
+            type="tel"
+            name="phone_no"
+            id="phone"
+            class="form-control"
+            placeholder="Enter your phone number"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            class="form-control"
+            placeholder="Create a password"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="confirm_password" class="form-label"
+            >Confirm Password</label
+          >
+          <input
+            type="password"
+            name="confirm_password"
+            id="confirm_password"
+            class="form-control"
+            placeholder="Confirm your password"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="user_role" class="form-label">User Role</label>
+          <select name="user_role" id="user_role" class="form-select" required>
+            <option selected value="customer">Customer</option>
+            <option value="service_provider">Service Provider</option>
+          </select>
+        </div>
+
+        <div class="col my-4">
+          <button type="submit" class="btn btn-primary">Register</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

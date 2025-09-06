@@ -1,19 +1,32 @@
-{% extends "base.html" %} {% load static %} {% block content %}
-<section class="container profile-setion my-5 " >
-  <div class="mx-auto text-center">
-    <div
-      class="rounded-circle mx-auto shadow"
-      style="width: 200px; height: 200px; overflow: hidden"
-    >
+{% extends "myapp/base.html" %} {% load static %} {% block content %}
+<section class="container profile-setion my-5">
+  <div class="mx-auto text-center "  >
+   
+    <div class="rounded-circle mx-auto shadow" style="width: 200px; height: 200px; overflow: hidden">
+    
       <img src={% if profile.profileImage %} "{{ profile.profileImage.url }}"  {% else %} 
       "{% static 'local_service_images/serviceprovider2.jpeg' %}" {% endif %} 
       alt="profileimage" class="img-fluid h-100 w-100" style="object-fit:
       cover" >
     </div>
-    <h4 class="mt-4 fw-semibold">{{ profile.username | default:"Customer Name" }}</h4>
     
+    <h4 class="mt-4 fw-semibold">{{ profile.username | default:"Customer Name" }}</h4>
+
+    <h5 class="text-muted mt-2">{{ profile.service_name | default:"Service Name" }}</h5>
+ 
   </div>
-  <div class="mt-4 p-4 shadow rounded  bg-light" >
+
+  <div class="mt-5 p-4 shadow-sm rounded bg-white">
+    <h3 class="mb-3 border-bottom pb-2">About Me</h3>
+    <p class="text-muted" style="line-height: 1.7">
+      {{ profile.about_content | default:" no content available " }}
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam aut dicta nihil sint, neque itaque consequuntur quo quis doloribus temporibus exercitationem esse ipsam cum expedita harum distinctio quaerat eius repellendus.
+     
+    </p>
+  </div>
+
+
+  <div class="mt-4 p-4 shadow-sm rounded bg-white">
     <h3 class="mb-3 border-bottom pb-2">Contact Information</h3>
 
     <div class="mb-3">
@@ -34,7 +47,7 @@
     </div>
   </div>
   <!-- Buttons -->
-  <div class="d-flex gap-5 mt-5 ">
+  <div class="d-flex gap-5 mt-5">
     <!-- Button to trigger Change Password Modal -->
     <button
       class="btn edit rounded-pill px-4"
@@ -47,7 +60,7 @@
     <!-- Edit Profile Button -->
 
     <a
-      href="{% url 'mainapp:CustomerProfileEdit' %}"
+      href="{% url 'mainapp:ProviderProfileEdit' %}"
       class="btn edit  rounded-pill px-4"
       >Edit Profile</a
     >
@@ -70,7 +83,7 @@
         <form method="POST" action="{% url 'mainapp:changepassword' %}">
           {% csrf_token %}
           <div class="modal-body">
-            {% include "include/error.html" %}
+            {% include "myapp/include/error.html" %}
             <div class="mb-3">
               <label for="old_Password" class="form-label">Old Password</label>
               <input

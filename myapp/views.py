@@ -10,10 +10,10 @@ from django.db.models import Q , Avg
 from django.core.paginator import Paginator
 # Create your views here.
 def home(request):
-       return render(request, 'home.html')
+       return render(request, 'myapp/home.html')
 
 def about(request):
-       return render(request, 'about.html')
+       return render(request, 'myapp/about.html')
 
 def login(request):
        if request.method == 'POST':
@@ -28,7 +28,7 @@ def login(request):
        else:
               form = LoginForm()
 
-       return render(request, 'login.html', context={'form': form})
+       return render(request, 'myapp/login.html', context={'form': form})
 
 def register(request):
        if request.method == 'POST':
@@ -46,7 +46,7 @@ def register(request):
                      return redirect('mainapp:login')
        else:
               form = RegisterForm()
-       return render(request,'register.html', context={'form': form})
+       return render(request,'myapp/register.html', context={'form': form})
 
 def logout(request):
        auth_logout(request)
@@ -86,7 +86,7 @@ def service(request):
                                 'category': category,
                                 'rating': rating
                             }
-       return render(request,'service.html', context={'page_obj': page_obj , 'form': form, 'filter_items': filter_items})
+       return render(request,'myapp/service.html', context={'page_obj': page_obj , 'form': form, 'filter_items': filter_items})
 
 
 def providerdetails(request, provider_slug):
@@ -94,7 +94,7 @@ def providerdetails(request, provider_slug):
        service_choices = Booking.SERVICE_TYPE_CHOICES
        previous_work = Previous_Work.objects.filter(service_provider=provider)
        rating= AverageRating.objects.filter(service_provider=provider).first()
-       return render (request,"providerdetails.html", context={'provider': provider, 'service_choices': service_choices, 'previous_work': previous_work, 'rating': rating})
+       return render (request,"myapp/providerdetails.html", context={'provider': provider, 'service_choices': service_choices, 'previous_work': previous_work, 'rating': rating})
 
 
 def dashboard(request):
@@ -111,7 +111,7 @@ def dashboard(request):
                      if rating is not None:
                             rating = round(rating, 1)
                      booking_reviews = BookingReviews.objects.filter(service_provider=profile)
-                     return render(request, 'provider_dashboard.html', context={'user': request.user, 'profile': profile, 'all_bookings': bookings, 'upcoming_booking': upcoming_booking, 'history': history , 'booking_reviews': booking_reviews, 'rating': rating , 'rejected': rejected, 'completed': completed, 'previous_work': previous_work    })
+                     return render(request, 'myapp/provider_dashboard.html', context={'user': request.user, 'profile': profile, 'all_bookings': bookings, 'upcoming_booking': upcoming_booking, 'history': history , 'booking_reviews': booking_reviews, 'rating': rating , 'rejected': rejected, 'completed': completed, 'previous_work': previous_work    })
               elif request.user.is_customer:
                      profile = CustomerProfileModel.objects.filter(user=request.user).first()
                      bookings = Booking.objects.filter(customer=profile).select_related('service_provider')
@@ -120,7 +120,7 @@ def dashboard(request):
                      booking_reviews = BookingReviews.objects.filter(customer=profile)
                      completed = bookings.filter(status='complete').count()
                      canceled = bookings.filter(status='cancel').count()
-                     return render(request, 'customer_dashboard.html', context={ 'user': request.user, 'profile':profile ,'all_bookings': bookings, 'upcoming_booking': upcoming_booking, 'history': history, 'booking_reviews': booking_reviews, 'completed': completed, 'canceled': canceled})
+                     return render(request, 'myapp/customer_dashboard.html', context={ 'user': request.user, 'profile':profile ,'all_bookings': bookings, 'upcoming_booking': upcoming_booking, 'history': history, 'booking_reviews': booking_reviews, 'completed': completed, 'canceled': canceled})
 
        else:
               return redirect('mainapp:login')
@@ -132,7 +132,7 @@ def CustomerProfile(request):
        print(CustomerProfile)
        if CustomerProfile is None:
               return redirect('mainapp:CustomerProfileEdit')
-       return render (request ,'CustomerProfile.html', context={'profile': CustomerProfile , 'user': request.user})
+       return render (request ,'myapp/CustomerProfile.html', context={'profile': CustomerProfile , 'user': request.user})
 
 @login_required
 def ProviderProfile(request):
@@ -140,7 +140,7 @@ def ProviderProfile(request):
        ProviderProfile=ProviderProfileModel.objects.filter(user=request.user).first()
        if ProviderProfile is None:
               return redirect('mainapp:ProviderProfileEdit')  
-       return render (request ,'ProviderProfile.html', context={'profile': ProviderProfile , 'user': request.user})
+       return render (request ,'myapp/ProviderProfile.html', context={'profile': ProviderProfile , 'user': request.user})
 
 
 @login_required
@@ -150,42 +150,30 @@ def CustomerProfileEdit(request):
               form = CustomerProfileForm(request.POST, request.FILES, instance=profile ,user=request.user)
               if form.is_valid():
                      profile.save()
-                     # if created:
-                     #         messages.success(request, "Profile created successfully")
-                     # else:
-                     #         messages.success(request, "Profile updated successfully")
+                     if created:
+                             messages.success(request, "Profile created successfully")
+                     else:
+                             messages.success(request, "Profile updated successfully")
                      return redirect('mainapp:CustomerProfile')
        else:
               form = CustomerProfileForm(instance=profile, user=request.user)
-       return render(request, 'CustomerProfileEdit.html', context={'form': form})
-
-
-def ProviderProfileCreate(request):
-       if request.method == 'POST':
-              form = ProviderProfileForm(request.POST, request.FILES, user=request.user)
-              if form.is_valid():
-                     profile = form.save(commit=False)
-                     profile.user = request.user
-                     profile.save()
-                     return redirect('mainapp:ProviderProfile')
-       else:
-              form = ProviderProfileForm(user=request.user)
-
-       return render(request, 'ProviderProfileEdit.html', context={'form': form})
-
+       return render(request, 'myapp/CustomerProfileEdit.html', context={'form': form ,'profile': profile })
 
 @login_required
 def ProviderProfileEdit(request):
-       profile = get_object_or_404(ProviderProfileModel, user=request.user)
+       profile ,created=ProviderProfileModel.objects.get_or_create(user=request.user)
        if request.method == 'POST':
               form = ProviderProfileForm(request.POST, request.FILES, instance=profile ,user=request.user)
               if form.is_valid():
                      profile.save()
+                     if created:
+                             messages.success(request, "Profile created successfully")
+                     else:
+                             messages.success(request, "Profile updated successfully")
                      return redirect('mainapp:ProviderProfile')
        else:
               form = ProviderProfileForm(instance=profile, user=request.user)
-
-       return render(request, 'ProviderProfileEdit.html', context={'form': form ,'profile': profile })
+       return render(request, 'myapp/ProviderProfileEdit.html', context={'form': form ,'profile': profile })
 
 
 @login_required
@@ -208,11 +196,13 @@ def changepassword(request):
 
        else:
               form = ChangePasswordForm(user=request.user)
-              
+         
        if request.user.is_service_provider:
-              return render(request, 'ProviderProfileEdit.html', context={'form': form})
+              ProviderProfile=ProviderProfileModel.objects.filter(user=request.user).first()
+              return render(request, 'myapp/ProviderProfile.html', context={'form': form, 'profile': ProviderProfile,'user': request.user})
        elif request.user.is_customer:
-              return render(request, 'CustomerProfileEdit.html', context={'form': form})
+              CustomerProfile=CustomerProfileModel.objects.filter(user=request.user).first()
+              return render(request, 'myapp/CustomerProfile.html', context={'form': form, 'profile': CustomerProfile,'user': request.user})
        else:
               return redirect('mainapp:home')
 
@@ -257,7 +247,7 @@ def service_booking(request ,provider_slug):
               #        print(form.errors)
        else:
               form = bookingForm()
-       return render(request, 'providerdetails.html', context={'form': form ,'service_choices': service_choices , 'provider': provider})
+       return render(request, 'myapp/providerdetails.html', context={'form': form ,'service_choices': service_choices , 'provider': provider})
 
 def update_booking_status(request , booking_id , action):
        booking = get_object_or_404(Booking, id=booking_id)

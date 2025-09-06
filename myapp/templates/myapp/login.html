@@ -1,11 +1,11 @@
-{% extends "base2.html" %} {% block content %}
+{% extends "myapp/base2.html" %} {% block content %}
 
 <section class="container login-section">
   <div class="row justify-content-center">
     <div class="col-10 col-md-6 col-lg-5">
       <div class=" p-1 p-sm-3 shadow rounded bg-white mt-2 mt-md-5">
         <h2 class="text-center my-3">Login Your Account</h2>
-        {% include "include/error.html" %}
+        {% include "myapp/include/error.html" %}
         <div class="p-4 pt-0">
           <form method="POST" class="form-container"  action="{% url 'mainapp:login' %}">
             {% csrf_token %}

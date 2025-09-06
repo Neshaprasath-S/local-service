@@ -59,13 +59,17 @@ class ChangePasswordForm(forms.Form):
 
       def clean(self): 
               cleaned_data = super().clean()
-              old_password = cleaned_data.get('old_password').strip()
-              new_password = cleaned_data.get('new_password').strip()
-              confirm_new_password = cleaned_data.get('confirm_new_password').strip()
-              if new_password and confirm_new_password and new_password != confirm_new_password:
-                     print("New passwords do not match")
-                     self.add_error('confirm_new_password', "New passwords and confirm new password do not match")
-              if self.user  and not self.user.check_password(old_password):
+              old_password = cleaned_data.get('old_password')
+              new_password = cleaned_data.get('new_password')
+              confirm_new_password = cleaned_data.get('confirm_new_password')
+              if old_password and new_password and confirm_new_password:
+                     old_password = old_password.strip()
+                     new_password = new_password.strip()
+                     confirm_new_password = confirm_new_password.strip()
+                     if new_password != confirm_new_password:
+                            print("New passwords do not match")
+                            self.add_error('confirm_new_password', "New passwords and confirm new password do not match")
+              if self.user and not self.user.check_password(old_password):
                      print("Old password is incorrect")
                      self.add_error("old_password", "Old password is incorrect")
 

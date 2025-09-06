@@ -1,9 +1,9 @@
-{% extends "base2.html" %} {% load static %} {% block content %}
+{% extends "myapp/base2.html" %} {% load static %} {% block content %}
 <section class="container editprofile-section">
   <h2 class="text-center mb-4">Profile</h2>
   <div class="row d-flex justify-content-center mb-5">
     <div class="shadow rounded  pb-3 px-3 p-sm-3 p-md-5 bg-white col-11 col-sm-10 col-md-9 col-lg-7 col-xl-6">
-      {% include "include/error.html" %}
+      {% include "myapp/include/error.html" %}
       <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
 
@@ -15,7 +15,9 @@
             id="profileImage"
             name="profileImage"
             placeholder="profile image"
-            required
+            {% if profile.profileImage %}
+              value="{{ profile.profileImage.url }}"
+            {% endif %}
           />
         </div>
 
@@ -28,6 +30,9 @@
             placeholder="Enter your name"
             required
             name="username"
+            {% if profile.username %}
+            value="{{ profile.username }}"
+            {% endif %}
           />
         </div>
        
@@ -43,6 +48,9 @@
             name="mobile_no"
             placeholder="1234567890"
             required
+            {% if profile.mobile_no %}
+            value="{{ profile.mobile_no }} "
+            {% endif %}
           />
         </div>
         <div class="form-group mt-4">
@@ -54,6 +62,10 @@
             name="email"
             placeholder="Example@email.com"
             required
+            {% if profile.email %}
+            value="{{ profile.email }} "
+            {% endif %}
+            
           />
         </div>
         <div class="form-group mt-4">
@@ -65,6 +77,9 @@
             name="district"
             placeholder=" Your district"
             required
+            {% if profile.district %}
+            value="{{ profile.district }}"
+            {% endif %}
           />
         </div>
         <div class="form-group mt-4">
@@ -76,6 +91,9 @@
             name="city"
             placeholder=" Your city"
             required
+            {% if profile.city %}
+            value="{{ profile.city }}"
+            {% endif %}
           />
         </div>
 
@@ -86,7 +104,8 @@
             id="address"
             class="form-control"
             placeholder="Street, City, District, ZIP code"
-          ></textarea>
+          >{% if profile.address %}{{ profile.address }}{% endif %}
+          </textarea>
         </div>
 
         <div class="form-group d-flex justify-content-between gap-5 ">

@@ -1,10 +1,10 @@
-{% extends "base2.html" %} {% block content %} {% load static %}
+{% extends "myapp/base2.html" %} {% block content %} {% load static %}
 
 <section class="container register-section">
   <div class="row pt-2 shadow-lg mt-4 rounded bg-white">
     <div class="text-center mb-4 col-12 col-md-6 col-lg-6 align-self-center registerImage">
       <h2 class="text-center mb-5">Create Your Account</h2>
-      {% include "include/error.html" %}
+      {% include "myapp/include/error.html" %}
       <img
         src="{% static 'local_service_images/register.jpg' %}"
         alt="Register"
@@ -18,7 +18,7 @@
       <form method="POST" class="form-container col-8 me-auto" style="width: 100%;">
         {% csrf_token %}
         <div class='d-md-none mb-3'>
-       {% include "include/error.html" %}
+       {% include "myapp/include/error.html" %}
          </div>
         <div class="mb-3">
           <label for="username" class="form-label">Username</label>
@@ -45,11 +45,11 @@
         </div>
 
         <div class="mb-3">
-          <label for="phone" class="form-label">Phone Number</label>
+          <label for="phone_number" class="form-label">Phone Number</label>
           <input
             type="tel"
-            name="phone_no"
-            id="phone"
+            name="phone_number"
+            id="phone_number"
             class="form-control"
             placeholder="Enter your phone number"
             required

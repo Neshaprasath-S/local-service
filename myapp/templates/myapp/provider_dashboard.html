@@ -1,6 +1,6 @@
-{% extends "base.html" %} {% load static %}  {% load tz %} {% block content %}
+{% extends "myapp/base.html" %} {% load static %}  {% load tz %} {% block content %}
 <section class="container-fluid">
-  {% include "include/messages.html" %}
+  {% include "myapp/include/message.html" %}
    <section class="row dashboard-section">
     <section class="col-lg-2 d-none d-lg-block nav-side bg-light pt-5">
       <nav
@@ -190,7 +190,7 @@
             
             <button
                 type="button"
-                class="btn edit rounded-pill  p-0 px-sm-4 "
+                class="btn edit rounded-pill  p-2 px-sm-4 "
                 data-bs-toggle="modal"
                 data-bs-target="#workModal"
                 id="addWorkButton"
@@ -212,7 +212,7 @@
                       <div class="modal-body">
                         <form method="POST" action="{% url 'mainapp:Add_previous_work' %}" enctype="multipart/form-data">
                           {% csrf_token %}
-                          {% include "include/error.html" %}
+                          {% include "myapp/include/error.html" %}
                           <!--  Highlights of work  -->
                           <h4 class="mt-4">Highlights of My Previous Work</h4>
 
@@ -307,7 +307,7 @@
                 <div class="modal-body add-work">
                   <form method="POST" action="{% url 'mainapp:previous_work_Edit' work_id=work.id %} " enctype="multipart/form-data">
                     {% csrf_token %}
-                    {% include "include/error.html" %}
+                    {% include "myapp/include/error.html" %}
                     <!--  Highlights of work  -->
                     <h4 class="mt-4 add-work-title ">Highlights of My Previous Work</h4>
 
@@ -433,7 +433,7 @@
     </section>
   </section>
 </section>
-{% include "include/message.html" %}
+{% include "myapp/include/message.html" %}
 {% if form.errors %}
 <script>
   document.addEventListener("DOMContentLoaded", function () {

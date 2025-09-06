@@ -18,7 +18,6 @@ urlpatterns = [
    path('dashboard/',views.dashboard,name="dashboard"),
    path('customer/profile/',views.CustomerProfile,name='CustomerProfile'),
    path('provider/profile/',views.ProviderProfile,name='ProviderProfile'),
-   path('provider/profile/create/', views.ProviderProfileCreate, name='ProviderProfileCreate'),
    path('changepassword/', views.changepassword, name='changepassword'),
    path('customer/profile/edit/', views.CustomerProfileEdit, name='CustomerProfileEdit'),
    path('provider/profile/edit/', views.ProviderProfileEdit, name='ProviderProfileEdit'),
